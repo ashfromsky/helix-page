@@ -1,620 +1,733 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎉 МЕГА ДЕНЬ РОЖДЕНИЯ ВОВЫ 🎉</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helix - The API that builds itself</title>
+    <style>
+        /* CSS стили остались без изменений для сохранения дизайна */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
-    body {
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(45deg, #ff1493, #ff69b4, #ff4500, #ffd700);
-      background-size: 400% 400%;
-      animation: gradientShift 3s ease infinite;
-      color: white;
-      overflow-x: hidden;
-    }
+        :root {
+            --primary: #040556;
+            --secondary: #130A82;
+            --accent: #8D018E;
+            --highlight: #C701AE;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --success: #00ff9d;
+        }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--darker);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 20px;
-      text-align: center;
-    }
+        .grid-background {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(199, 1, 174, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(199, 1, 174, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    .title {
-      font-size: 2.5em;
-      font-weight: bold;
-      margin-bottom: 20px;
-      text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-      animation: bounce 2s infinite;
-    }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 1;
+        }
 
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-10px); }
-      60% { transform: translateY(-5px); }
-    }
+        header {
+            padding: 40px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(199, 1, 174, 0.1);
+        }
 
-    .congratulation {
-      background: rgba(255, 255, 255, 0.95);
-      color: #8b008b;
-      padding: 20px;
-      border-radius: 15px;
-      margin: 20px 0;
-      font-size: 1.2em;
-      line-height: 1.6;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      backdrop-filter: blur(10px);
-    }
+        nav { display: flex; justify-content: space-between; align-items: center; }
 
-    .buttons {
-      margin: 30px 0;
-    }
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            color: #ffffff;
+            position: relative;
+            text-decoration: none;
+        }
 
-    .btn {
-      background: linear-gradient(45deg, #32cd32, #00ff00);
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.3em;
-      font-weight: bold;
-      border-radius: 25px;
-      cursor: pointer;
-      margin: 10px;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
+        .logo::before {
+            content: '';
+            position: absolute;
+            width: 8px; height: 8px;
+            background: var(--highlight);
+            border-radius: 50%;
+            left: -20px; top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 20px var(--highlight);
+            animation: pulse 2s infinite;
+        }
 
-    .btn:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-    }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
 
-    .btn.surprise {
-      background: linear-gradient(45deg, #ff4500, #ff6347);
-    }
+        .nav-links { display: flex; gap: 50px; list-style: none; align-items: center; }
 
-    .game-container {
-      display: none;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 20px;
-      backdrop-filter: blur(10px);
-    }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
 
-    .game-stats {
-      display: flex;
-      justify-content: space-around;
-      background: rgba(65, 105, 225, 0.8);
-      padding: 15px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
+        .nav-links a:hover { color: var(--highlight); }
 
-    .stat {
-      font-size: 1.2em;
-      font-weight: bold;
-      margin: 5px;
-    }
+        .hero { padding: 180px 0 200px; position: relative; }
+        .hero-content { max-width: 900px; }
 
-    .game-canvas {
-      width: 100%;
-      height: 400px;
-      background: linear-gradient(135deg, #87ceeb, #add8e6);
-      border-radius: 15px;
-      position: relative;
-      overflow: hidden;
-      cursor: crosshair;
-      border: 3px solid #4169e1;
-    }
+        .hero-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(199, 1, 174, 0.1);
+            border: 1px solid rgba(199, 1, 174, 0.3);
+            border-radius: 30px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--highlight);
+            margin-bottom: 40px;
+        }
 
-    .cow {
-      position: absolute;
-      font-size: 2.5em;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      user-select: none;
-      animation: cowFloat 2s ease-in-out infinite;
-    }
+        h1 {
+            font-size: 120px;
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -6px;
+            margin-bottom: 40px;
+            color: #ffffff;
+        }
 
-    @keyframes cowFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(5deg); }
-    }
+        .hero-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, var(--highlight) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
 
-    .cow:hover {
-      transform: scale(1.2) rotate(10deg);
-    }
+        .hero-subtitle {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.4);
+            max-width: 600px;
+            margin-bottom: 60px;
+            font-weight: 300;
+            line-height: 1.7;
+        }
 
-    .particle {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: particleExplode 1s ease-out forwards;
-    }
+        .cta-group { display: flex; gap: 20px; align-items: center; }
 
-    @keyframes particleExplode {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(0) translateY(-50px);
-        opacity: 0;
-      }
-    }
+        .btn {
+            padding: 20px 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
 
-    .score-popup {
-      position: absolute;
-      font-size: 1.8em;
-      font-weight: bold;
-      color: #ffff00;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-      pointer-events: none;
-      animation: scorePopup 1.5s ease-out forwards;
-    }
+        .btn-primary {
+            background: var(--highlight);
+            color: #ffffff;
+            border-radius: 0;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
+        }
 
-    @keyframes scorePopup {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-50px) scale(1.5);
-        opacity: 0;
-      }
-    }
+        .btn-primary:hover { background: #ffffff; color: var(--darker); }
 
-    .achievement {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(45deg, #ffd700, #ffff00);
-      color: #8b4513;
-      padding: 20px 40px;
-      border-radius: 20px;
-      font-size: 1.5em;
-      font-weight: bold;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      animation: achievementShow 3s ease-in-out forwards;
-      z-index: 1000;
-    }
+        .btn-ghost {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-    @keyframes achievementShow {
-      0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-      80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-    }
+        .btn-ghost:hover { border-color: var(--highlight); color: var(--highlight); }
 
-    .surprise-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      z-index: 2000;
-    }
+        .hero-decoration {
+            position: absolute;
+            right: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 500px;
+            height: 500px;
+            border: 1px solid rgba(199, 1, 174, 0.1);
+            border-radius: 50%;
+        }
 
-    .surprise-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(45deg, #ff69b4, #ff1493);
-      padding: 30px;
-      border-radius: 20px;
-      max-width: 600px;
-      max-height: 80vh;
-      overflow-y: auto;
-      text-align: left;
-    }
+        .hero-decoration::before {
+            content: '';
+            position: absolute;
+            inset: 40px;
+            border: 1px solid rgba(199, 1, 174, 0.08);
+            border-radius: 50%;
+        }
 
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      background: none;
-      border: none;
-      font-size: 2em;
-      color: white;
-      cursor: pointer;
-    }
+        .features {
+            padding: 200px 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(199, 1, 174, 0.02) 100%);
+        }
 
-    .confetti {
-      position: fixed;
-      font-size: 2em;
-      animation: confettiFall 3s linear infinite;
-      pointer-events: none;
-      z-index: 100;
-    }
+        .section-header { margin-bottom: 100px; }
+        .section-label {
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--highlight);
+            margin-bottom: 20px;
+        }
 
-    @keyframes confettiFall {
-      0% {
-        transform: translateY(-100vh) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
+        .section-title {
+            font-size: 56px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            max-width: 700px;
+        }
 
-    .game-over {
-      background: rgba(255, 20, 147, 0.95);
-      padding: 30px;
-      border-radius: 20px;
-      margin-top: 20px;
-    }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: rgba(199, 1, 174, 0.1);
+        }
 
-    .bonus-item {
-      position: absolute;
-      font-size: 2em;
-      cursor: pointer;
-      animation: bonusPulse 1s ease-in-out infinite;
-    }
+        .feature-card {
+            background: var(--darker);
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s;
+        }
 
-    @keyframes bonusPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
+        .feature-card:hover { background: rgba(199, 1, 174, 0.03); }
 
-    @media (max-width: 768px) {
-      .title { font-size: 2em; }
-      .congratulation { font-size: 1em; padding: 15px; }
-      .btn { font-size: 1.1em; padding: 12px 25px; }
-      .game-stats { flex-direction: column; text-align: center; }
-      .game-canvas { height: 300px; }
-    }
-  </style>
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--highlight), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-number {
+            font-size: 14px;
+            color: var(--highlight);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .feature-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .code-section { padding: 200px 0; }
+        .code-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .code-info h2 { font-size: 48px; font-weight: 900; letter-spacing: -2px; margin-bottom: 30px; }
+        .code-info p { font-size: 18px; color: rgba(255, 255, 255, 0.4); line-height: 1.8; margin-bottom: 40px; }
+
+        .terminal {
+            background: #000000;
+            border: 1px solid rgba(199, 1, 174, 0.2);
+            padding: 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            position: relative;
+            box-shadow: 0 10px 50px rgba(199, 1, 174, 0.1);
+        }
+
+        .terminal-header {
+            background: rgba(199, 1, 174, 0.05);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(199, 1, 174, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); }
+        .terminal-dot:nth-child(1) { background: #ff5f56; }
+        .terminal-dot:nth-child(2) { background: #ffbd2e; }
+        .terminal-dot:nth-child(3) { background: #27c93f; }
+
+        .terminal-body { padding: 30px; line-height: 1.8; }
+        .cmd { color: var(--highlight); }
+        .output { color: rgba(255, 255, 255, 0.6); }
+        .comment { color: rgba(255, 255, 255, 0.3); }
+
+        .quickstart {
+            padding: 200px 0;
+            background: linear-gradient(180deg, rgba(199, 1, 174, 0.02) 0%, transparent 100%);
+        }
+
+        .quickstart-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .quickstart-card {
+            background: rgba(10, 10, 15, 0.5);
+            border: 1px solid rgba(199, 1, 174, 0.1);
+            padding: 40px;
+            position: relative;
+        }
+
+        .quickstart-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--highlight);
+        }
+
+        .quickstart-step {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--highlight);
+            opacity: 0.2;
+            margin-bottom: 20px;
+        }
+
+        .quickstart-card h3 { font-size: 24px; margin-bottom: 15px; letter-spacing: -1px; }
+        .quickstart-card p { color: rgba(255, 255, 255, 0.4); line-height: 1.7; margin-bottom: 20px; }
+
+        .quickstart-card pre {
+            background: #000;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 13px;
+            color: var(--success);
+            border: 1px solid rgba(199, 1, 174, 0.1);
+        }
+
+        .providers { padding: 200px 0; }
+        .providers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background: rgba(199, 1, 174, 0.1);
+            margin-top: 60px;
+        }
+
+        .provider-card {
+            background: var(--darker);
+            padding: 40px 30px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .provider-card:hover { background: rgba(199, 1, 174, 0.03); }
+        .provider-icon { font-size: 48px; margin-bottom: 20px; }
+        .provider-card h3 { font-size: 20px; margin-bottom: 10px; }
+        .provider-card p { color: rgba(255, 255, 255, 0.4); font-size: 14px; margin-bottom: 15px; }
+
+        .provider-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(199, 1, 174, 0.1);
+            border: 1px solid rgba(199, 1, 174, 0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--highlight);
+        }
+
+        .stats {
+            padding: 200px 0;
+            border-top: 1px solid rgba(199, 1, 174, 0.1);
+            border-bottom: 1px solid rgba(199, 1, 174, 0.1);
+        }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 80px; }
+        .stat { text-align: left; }
+        .stat-number {
+            font-size: 72px; font-weight: 900; letter-spacing: -3px;
+            color: var(--highlight); margin-bottom: 10px; line-height: 1;
+        }
+        .stat-label {
+            font-size: 14px; color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .cta-section { padding: 250px 0; text-align: center; }
+        .cta-section h2 {
+            font-size: 80px; font-weight: 900; letter-spacing: -4px;
+            margin-bottom: 60px; line-height: 1;
+        }
+
+        footer { padding: 80px 0 40px; border-top: 1px solid rgba(199, 1, 174, 0.1); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 80px; margin-bottom: 80px; }
+        .footer-brand { max-width: 300px; }
+        .footer-brand .logo { margin-bottom: 20px; }
+        .footer-brand p { color: rgba(255, 255, 255, 0.3); font-size: 14px; line-height: 1.8; }
+        .footer-section h4 {
+            font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 20px; color: var(--highlight);
+        }
+        .footer-section ul { list-style: none; }
+        .footer-section li { margin-bottom: 12px; }
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.4); text-decoration: none;
+            font-size: 14px; transition: color 0.3s;
+        }
+        .footer-section a:hover { color: var(--highlight); }
+
+        .footer-bottom {
+            text-align: center; padding-top: 40px;
+            border-top: 1px solid rgba(199, 1, 174, 0.1);
+            color: rgba(255, 255, 255, 0.3); font-size: 13px;
+        }
+
+        @media (max-width: 1200px) {
+            h1 { font-size: 80px; letter-spacing: -4px; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .code-wrapper { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .quickstart-grid { grid-template-columns: 1fr; }
+            .providers-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            h1 { font-size: 48px; letter-spacing: -2px; }
+            .hero { padding: 100px 0; }
+            .hero-decoration { display: none; }
+            .nav-links { display: none; }
+            .features-grid { grid-template-columns: 1fr; gap: 1px; }
+            .cta-group { flex-direction: column; width: 100%; }
+            .btn { width: 100%; text-align: center; }
+            .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+            .cta-section h2 { font-size: 48px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 40px; }
+            .providers-grid { grid-template-columns: 1fr; gap: 1px; }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <div id="mainScreen">
-    <h1 class="title">🎂 С ДНЁМ РОЖДЕНИЯ, ВОВА! 🎂</h1>
+    <div class="grid-background"></div>
 
-    <div class="congratulation">
-      🎨 <strong>Вова, ты — шедевральный художник и музыкант с душой!</strong> 🎵<br>
-      💪 <strong>Ты просто охренительный человек, от которого все тащатся!</strong> 💯<br>
-      👑 <strong>Тёлки от тебя текут, друзья уважают, жизнь — твоя сцена!</strong> 🌟<br>
-      🚀 <strong>Желаю тебе кайфа, побед и бесконечного вдохновения!</strong> ❤️<br>
-      🎮 <strong>А теперь давай сыграем в крутую игру специально для тебя!</strong> 🔥
-    </div>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">HELIX</a>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#quickstart">Quick Start</a></li>
+                    <li><a href="https://github.com/ashfromsky/helix" target="_blank">Docs</a></li>
+                    <li><a href="https://github.com/ashfromsky/helix" target="_blank">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <div class="buttons">
-      <button class="btn" onclick="startGame()">🐄 ПОЙМАТЬ ВСЕХ ТЁЛОК! 🐄</button>
-      <button class="btn surprise" onclick="showSurprise()">🎁 СЮРПРИЗ ДЛЯ ВОВЫ 🎁</button>
-    </div>
-  </div>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-tag">AI-Powered API Mocking</span>
+                <h1>
+                    The API<br>
+                    <span class="hero-gradient">that builds<br>itself</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Stop writing JSON mocks. Focus on building features.
+                    Helix generates realistic API responses automatically using AI.
+                </p>
+                <div class="cta-group">
+                    <a href="#quickstart" class="btn btn-primary">Get Started</a>
+                    <a href="https://github.com/ashfromsky/helix" target="_blank" class="btn btn-ghost">View on GitHub →</a>
+                </div>
+            </div>
+            <div class="hero-decoration"></div>
+        </div>
+    </section>
 
-  <div id="gameScreen" class="game-container">
-    <div class="game-stats">
-      <div class="stat">💯 Счёт: <span id="score">0</span></div>
-      <div class="stat">⚡ Уровень: <span id="level">1</span></div>
-      <div class="stat">🔥 Комбо: <span id="combo">0</span></div>
-      <div class="stat">⏰ Время: <span id="timer">30</span></div>
-    </div>
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Capabilities</div>
+                <h2 class="section-title">Built for modern development workflows</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-number">01</div>
+                    <h3 class="feature-title">Zero Configuration</h3>
+                    <p class="feature-description">
+                        No setup required. Start Helix and make requests to any endpoint.
+                        AI analyzes paths and generates realistic responses instantly.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">02</div>
+                    <h3 class="feature-title">Context Awareness</h3>
+                    <p class="feature-description">
+                        Helix remembers your actions within sessions. Create a user,
+                        then list users—it returns what you created.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">03</div>
+                    <h3 class="feature-title">Smart Data</h3>
+                    <p class="feature-description">
+                        Generates realistic data: proper names, valid emails,
+                        correct dates, professional IDs. Your demos look real.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">04</div>
+                    <h3 class="feature-title">Multiple AI Providers</h3>
+                    <p class="feature-description">
+                        Choose from DeepSeek, Groq, Ollama, or built-in demo mode.
+                        Free tiers available with generous rate limits.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">05</div>
+                    <h3 class="feature-title">Chaos Engineering</h3>
+                    <p class="feature-description">
+                        Simulate production failures: random errors, latency spikes,
+                        timeouts. Build resilient applications from day one.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">06</div>
+                    <h3 class="feature-title">Redis Caching</h3>
+                    <p class="feature-description">
+                        Lightning-fast responses with intelligent caching.
+                        Session-aware storage keeps your data consistent.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <div id="gameCanvas" class="game-canvas"></div>
+    <section class="code-section">
+        <div class="container">
+            <div class="code-wrapper">
+                <div class="code-info">
+                    <h2>Zero configuration required</h2>
+                    <p>
+                        Start Helix, make any request to any endpoint.
+                        AI analyzes your request structure and generates
+                        a realistic response that matches REST conventions.
+                    </p>
+                    <a href="https://github.com/ashfromsky/helix" target="_blank" class="btn btn-ghost">Read Documentation →</a>
+                </div>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot"></div>
+                        <div class="terminal-dot"></div>
+                        <div class="terminal-dot"></div>
+                    </div>
+                    <div class="terminal-body">
+<span class="comment"># Start Helix with Docker</span>
+<span class="cmd">$ docker-compose up</span>
 
-    <div id="gameOver" class="game-over" style="display: none;">
-      <h2>🎉 ИГРА ОКОНЧЕНА! 🎉</h2>
-      <p id="finalScore"></p>
-      <button class="btn" onclick="restartGame()">🔄 ИГРАТЬ ЕЩЁ РАЗ</button>
-      <button class="btn surprise" onclick="backToMain()">🏠 НА ГЛАВНУЮ</button>
-    </div>
-  </div>
-</div>
+<span class="comment"># Make any request - no setup needed</span>
+<span class="cmd">$ curl http://localhost:8080/api/users</span>
 
-<!-- Модальное окно сюрприза -->
-<div id="surpriseModal" class="surprise-modal">
-  <div class="surprise-content">
-    <button class="close-btn" onclick="closeSurprise()">&times;</button>
-    <h2>🎁 ПЕРСОНАЛЬНОЕ ПОСЛАНИЕ ДЛЯ ВОВЫ 🎁</h2>
-    <br>
-    <p><strong>🎨 Братан, ты не просто друг — ты легенда! 🌟</strong></p>
-    <p><strong>🎵 Твоё творчество вдохновляет, твоя музыка качает душу!</strong></p>
-    <p><strong>🎨 Ты умеешь делать этот мир ярче и прикольнее!</strong></p>
-    <br>
-    <p><strong>Пусть в новом году жизни у тебя будет:</strong></p>
-    <p>🚀 Больше крутых проектов</p>
-    <p>💰 Много денег за твоё искусство</p>
-    <p>❤️ Любовь и понимание близких</p>
-    <p>🎪 Приключения и незабываемые моменты</p>
-    <p>🏆 Признание твоего таланта</p>
-    <br>
-    <p><strong>🎂 Ты достоин всего самого лучшего, Вова!</strong></p>
-    <p><strong>🎉 С днём рождения, чемпион!</strong></p>
-  </div>
-</div>
-
-<script>
-  let gameActive = false;
-  let score = 0;
-  let level = 1;
-  let combo = 0;
-  let timeLeft = 30;
-  let cowInterval;
-  let timerInterval;
-  let bonusInterval;
-  let achievements = [];
-
-  const mainScreen = document.getElementById('mainScreen');
-  const gameScreen = document.getElementById('gameScreen');
-  const gameCanvas = document.getElementById('gameCanvas');
-  const gameOver = document.getElementById('gameOver');
-  const surpriseModal = document.getElementById('surpriseModal');
-
-  function startGame() {
-    mainScreen.style.display = 'none';
-    gameScreen.style.display = 'block';
-    gameOver.style.display = 'none';
-
-    gameActive = true;
-    score = 0;
-    level = 1;
-    combo = 0;
-    timeLeft = 30;
-    achievements = [];
-
-    updateUI();
-    spawnCow();
-    startTimer();
-    startBonusSpawner();
-    createConfetti();
-  }
-
-  function spawnCow() {
-    if (!gameActive) return;
-
-    const oldCows = gameCanvas.querySelectorAll('.cow');
-    oldCows.forEach(cow => cow.remove());
-
-    const cow = document.createElement('div');
-    cow.className = 'cow';
-
-    const cows = ['🐄', '🐮', '🥛', '🍼'];
-    cow.textContent = cows[Math.floor(Math.random() * cows.length)];
-
-    const maxX = gameCanvas.offsetWidth - 60;
-    const maxY = gameCanvas.offsetHeight - 60;
-    cow.style.left = Math.random() * maxX + 'px';
-    cow.style.top = Math.random() * maxY + 'px';
-
-    cow.addEventListener('click', (e) => catchCow(e, cow));
-    gameCanvas.appendChild(cow);
-
-    const speed = Math.max(500, 1000 - (level * 50));
-    cowInterval = setTimeout(spawnCow, speed);
-  }
-
-  function catchCow(e, cow) {
-    e.stopPropagation();
-
-    const points = 10 * level * Math.max(1, combo);
-    score += points;
-    combo++;
-
-    createHitEffect(e.pageX, e.pageY, points);
-    createParticles(e.pageX, e.pageY);
-
-    cow.remove();
-
-    checkAchievements();
-
-    const newLevel = Math.floor(score / 100) + 1;
-    if (newLevel > level) {
-      level = newLevel;
-      showAchievement(`🎉 УРОВЕНЬ ${level} 🎉`);
+<span class="output">{
+  "users": [
+    {
+      "id": "usr_a1b2c3",
+      "name": "Sarah Chen",
+      "email": "sarah@company.com",
+      "username": "schen",
+      "role": "developer",
+      "status": "active",
+      "created_at": "2024-12-10T14:30:00Z"
     }
+  ],
+  "total": 3,
+  "page": 1,
+  "per_page": 10
+}</span>
 
-    updateUI();
-  }
+<span class="comment"># No mock files. No configuration. Pure magic.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  gameCanvas.addEventListener('click', (e) => {
-    if (e.target === gameCanvas) {
-      combo = 0;
-      createMissEffect(e.pageX, e.pageY);
-      updateUI();
-    }
-  });
+    <section class="quickstart" id="quickstart">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Quick Start</div>
+                <h2 class="section-title">Up and running in 60 seconds</h2>
+            </div>
+            <div class="quickstart-grid">
+                <div class="quickstart-card">
+                    <div class="quickstart-step">01</div>
+                    <h3>Clone & Setup</h3>
+                    <p>Clone the repository and run the setup script. It handles everything automatically.</p>
+                    <pre>git clone https://github.com/ashfromsky/helix
+cd helix
+./setup.sh</pre>
+                </div>
+                <div class="quickstart-card">
+                    <div class="quickstart-step">02</div>
+                    <h3>Start Services</h3>
+                    <p>Launch Redis and Helix using Docker Compose. Works on any platform.</p>
+                    <pre>docker-compose up</pre>
+                </div>
+                <div class="quickstart-card">
+                    <div class="quickstart-step">03</div>
+                    <h3>Make Requests</h3>
+                    <p>Hit any endpoint. Helix generates realistic responses automatically.</p>
+                    <pre>curl localhost:8080/api/products
+# Instant realistic JSON!</pre>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  function createHitEffect(x, y, points) {
-    const scorePopup = document.createElement('div');
-    scorePopup.className = 'score-popup';
-    scorePopup.textContent = `+${points}`;
-    scorePopup.style.left = x + 'px';
-    scorePopup.style.top = y + 'px';
-    document.body.appendChild(scorePopup);
+    <section class="providers">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">AI Providers</div>
+                <h2 class="section-title">Choose your intelligence layer</h2>
+            </div>
+            <div class="providers-grid">
+                <div class="provider-card">
+                    <div class="provider-icon">🎭</div>
+                    <h3>Demo Mode</h3>
+                    <p>Template-based generation using Faker library</p>
+                    <span class="provider-badge">Default</span>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-icon">🧠</div>
+                    <h3>DeepSeek</h3>
+                    <p>Via OpenRouter API with free tier available</p>
+                    <span class="provider-badge">500/day</span>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-icon">⚡</div>
+                    <h3>Groq</h3>
+                    <p>Ultra-fast LPU inference with generous limits</p>
+                    <span class="provider-badge">14.4K/day</span>
+                </div>
+                <div class="provider-card">
+                    <div class="provider-icon">🏠</div>
+                    <h3>Ollama</h3>
+                    <p>Run AI models locally on your machine</p>
+                    <span class="provider-badge">Offline</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    setTimeout(() => scorePopup.remove(), 1500);
-  }
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-number">< 80ms</div>
+                    <div class="stat-label">Response Time</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">REST Compatible</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Endpoints Supported</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Config Files Needed</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  function createMissEffect(x, y) {
-    const missPopup = document.createElement('div');
-    missPopup.className = 'score-popup';
-    missPopup.textContent = 'МИМО! 😢';
-    missPopup.style.color = '#ff0000';
-    missPopup.style.left = x + 'px';
-    missPopup.style.top = y + 'px';
-    document.body.appendChild(missPopup);
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to ship<br>faster?</h2>
+            <div class="cta-group" style="justify-content: center;">
+                <a href="#quickstart" class="btn btn-primary">Start Using Helix</a>
+                <a href="https://github.com/ashfromsky/helix" target="_blank" class="btn btn-ghost">Star on GitHub ⭐</a>
+            </div>
+        </div>
+    </section>
 
-    setTimeout(() => missPopup.remove(), 1500);
-  }
-
-  function createParticles(x, y) {
-    const colors = ['#ff0000', '#ff4500', '#ffd700', '#32cd32', '#1e90ff', '#8a2be2'];
-
-    for (let i = 0; i < 8; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      particle.style.left = x + 'px';
-      particle.style.top = y + 'px';
-
-      const angle = (i / 8) * 2 * Math.PI;
-      const distance = 50;
-      particle.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
-      particle.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
-
-      document.body.appendChild(particle);
-      setTimeout(() => particle.remove(), 1000);
-    }
-  }
-
-  function startTimer() {
-    timerInterval = setInterval(() => {
-      if (!gameActive) return;
-
-      timeLeft--;
-      document.getElementById('timer').textContent = timeLeft;
-
-      if (timeLeft <= 0) {
-        endGame();
-      }
-    }, 1000);
-  }
-
-  function startBonusSpawner() {
-    bonusInterval = setInterval(() => {
-      if (!gameActive) return;
-
-      if (Math.random() < 0.3) {
-        createBonus();
-      }
-    }, 5000);
-  }
-
-  function createBonus() {
-    const bonus = document.createElement('div');
-    bonus.className = 'bonus-item';
-
-    const bonuses = ['🎁', '⭐', '💎', '🍰', '🎈'];
-    bonus.textContent = bonuses[Math.floor(Math.random() * bonuses.length)];
-
-    const maxX = gameCanvas.offsetWidth - 40;
-    const maxY = gameCanvas.offsetHeight - 40;
-    bonus.style.left = Math.random() * maxX + 'px';
-    bonus.style.top = Math.random() * maxY + 'px';
-
-    bonus.addEventListener('click', (e) => {
-      e.stopPropagation();
-      score += 50;
-      timeLeft += 5;
-      createHitEffect(e.pageX, e.pageY, 50);
-      bonus.remove();
-      updateUI();
-    });
-
-    gameCanvas.appendChild(bonus);
-
-    setTimeout(() => {
-      if (bonus.parentNode) bonus.remove();
-    }, 3000);
-  }
-
-  function checkAchievements() {
-    if (score >= 500 && !achievements.includes('Мастер')) {
-      achievements.push('Мастер');
-      showAchievement('🏆 МАСТЕР ЛОВЛИ ТЁЛОК! 🏆');
-    }
-
-    if (combo >= 10 && !achievements.includes('Комбо-король')) {
-      achievements.push('Комбо-король');
-      showAchievement('🔥 КОМБО-КОРОЛЬ! 🔥');
-    }
-  }
-
-  function showAchievement(text) {
-    const achievement = document.createElement('div');
-    achievement.className = 'achievement';
-    achievement.textContent = text;
-    document.body.appendChild(achievement);
-
-    setTimeout(() => achievement.remove(), 3000);
-  }
-
-  function updateUI() {
-    document.getElementById('score').textContent = score;
-    document.getElementById('level').textContent = level;
-    document.getElementById('combo').textContent = combo;
-    document.getElementById('timer').textContent = timeLeft;
-  }
-
-  function endGame() {
-    gameActive = false;
-    clearTimeout(cowInterval);
-    clearInterval(timerInterval);
-    clearInterval(bonusInterval);
-
-    gameCanvas.innerHTML = '';
-
-    document.getElementById('finalScore').innerHTML =
-            `🎉 <strong>Твой счёт: ${score}</strong><br>
-                 ⚡ <strong>Уровень: ${level}</strong><br>
-                 🏆 <strong>Вова, ты просто красавчик!</strong>`;
-
-    gameOver.style.display = 'block';
-  }
-
-  function restartGame() {
-    startGame();
-  }
-
-  function backToMain() {
-    gameScreen.style.display = 'none';
-    mainScreen.style.display = 'block';
-  }
-
-  function showSurprise() {
-    surpriseModal.style.display = 'block';
-    createConfetti();
-  }
-
-  function closeSurprise() {
-    surpriseModal.style.display = 'none';
-  }
-
-  function createConfetti() {
-    for (let i = 0; i < 50; i++) {
-      setTimeout(() => {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.textContent = ['🎉', '🎊', '⭐', '💎', '🎈'][Math.floor(Math.random() * 5)];
-        confetti.style.left = Math.random() * window.innerWidth + 'px';
-        confetti.style.animationDelay = Math.random() * 3 + 's';
-        document.body.appendChild(confetti);
-
-        setTimeout(() => confetti.remove(), 3000);
-      }, i * 100);
-    }
-  }
-
-  surpriseModal.addEventListener('click', (e) => {
-    if (e.target === surpriseModal) {
-      closeSurprise();
-    }
-  });
-
-  createConfetti();
-</script>
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">HELIX</div>
+                    <p>
+                        The AI-powered API mocking server that eliminates manual mock creation.
+                        Built for developers who want to focus on features, not infrastructure.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#quickstart">Quick Start</a></li>
+                        <li><a href="https://github.com/ashfromsky/helix/releases" target="_blank">Releases</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://github.com/ashfromsky/helix" target="_blank">Documentation</a></li>
+                        <li><a href="https://github.com/ashfromsky/helix" target="_blank">GitHub</a></li>
+                        <li><a href="https://github.com/ashfromsky/helix/issues" target="_blank">Report Issue</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/ashfromsky/helix" target="_blank">Star on GitHub</a></li>
+                        <li><a href="https://github.com/ashfromsky/helix/blob/master/LICENSE" target="_blank">License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Helix. Built with precision for developers.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
